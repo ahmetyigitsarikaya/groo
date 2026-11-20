@@ -30,7 +30,7 @@ jobs:
           coverage: none
 
       - name: Composer security advisory audit
-        run: composer audit --no-interaction
+        run: composer audit --locked --no-interaction
 
       - name: Verify forbidden artifacts are not tracked
         run: |
