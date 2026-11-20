@@ -1,0 +1,29 @@
+{
+    "name": "groo/core",
+    "description": "Groo - Extensible Plugin/Module based CMS/CRM Core",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0",
+        "bramus/router": "^1.6",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Plugins\\": "plugins/",
+            "Templates\\": "templates/"
+        },
+        "exclude-from-classmap": [
+            "app/Database/Migrations/",
+            "plugins/*/Migrations/",
+            "templates/*/Migrations/"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

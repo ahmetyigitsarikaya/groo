@@ -1,0 +1,13 @@
+# Prevent execution of PHP or script files inside user/theme uploads
+Options -Indexes -ExecCGI
+
+<FilesMatch "(?i)\.(php|phtml|phar|php[3-8]|cgi|pl|py|sh|exe)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>

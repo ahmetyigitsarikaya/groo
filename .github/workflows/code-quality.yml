@@ -1,0 +1,72 @@
+name: Code Quality & Hygiene
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hygiene-and-audit:
+    name: Security Audit & Repository Hygiene
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+          coverage: none
+
+      - name: Composer security advisory audit
+        run: composer audit --no-interaction
+
+      - name: Verify forbidden artifacts are not tracked
+        run: |
+          set -euo pipefail
+          FORBIDDEN=(
+            ".env"
+            "composer.phar"
+            "public/clear_opcache.php"
+            "test_process_assets.php"
+          )
+          for path in "${FORBIDDEN[@]}"; do
+            if [ -e "$path" ]; then
+              echo "::error::Forbidden local/debug artifact found in repository: $path"
+              exit 1
+            fi
+          done
+          if [ -d "scratch" ]; then
+            echo "::error::Scratch directory should not be committed."
+            exit 1
+          fi
+          if [ -d "vendor" ]; then
+            echo "::error::Composer vendor/ directory should not be committed."
+            exit 1
+          fi
+
+      - name: Verify no hardcoded local XAMPP paths in source files
+        run: |
+          set -euo pipefail
+          if grep -rnI --exclude-dir=.git --exclude-dir=vendor --exclude-dir=docs -iE 'c:[/\\]xampp' app install plugins public templates; then
+            echo "::error::Hardcoded local XAMPP path found in source files."
+            exit 1
+          fi
+
+      - name: Verify Apache upload execution guard exists
+        run: |
+          set -euo pipefail
+          test -f public/uploads/.htaccess
+          grep -q "php_flag engine off" public/uploads/.htaccess
+          grep -q "composer" .htaccess

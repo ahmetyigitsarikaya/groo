@@ -1,0 +1,59 @@
+# Environment & Local Configuration
+.env
+.env.*
+!.env.example
+
+# Composer Dependencies & Bundled Binary
+/vendor/
+composer.phar
+
+# Runtime Caches, Logs & Temporary Extraction Files
+/storage/cache/*
+!/storage/cache/.gitkeep
+!/storage/cache/html/
+/storage/cache/html/*
+!/storage/cache/html/.gitkeep
+!/storage/cache/seo/
+/storage/cache/seo/*
+!/storage/cache/seo/.gitkeep
+/storage/temp/*
+!/storage/temp/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# User & Runtime-Generated Uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+!/public/uploads/.htaccess
+
+# Local Scratch & Debug Artifacts
+/scratch/
+test_*.php
+public/clear_opcache.php
+*.log
+*.bak
+*.tmp
+*.swp
+*~
+
+# Node / Frontend Tooling (if added later)
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# PHP Tooling & Test Caches
+.phpunit.result.cache
+.php-cs-fixer.cache
+.phpstan.cache
+
+# IDE & Editor Files
+/.idea/
+/.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS Metadata
+.DS_Store
+Thumbs.db
+Desktop.ini

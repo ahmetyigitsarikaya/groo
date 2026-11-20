@@ -1,0 +1,22 @@
+Options -Indexes -MultiViews
+ServerSignature Off
+
+<FilesMatch "^\.env(\..*)?$|^composer\.(json|lock|phar)$|^phpunit\.xml$|^\.(gitignore|gitattributes|editorconfig)$|\.md$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteRule ^(app|plugins|templates|vendor|storage|database|docs|scratch|\.git|\.github)(/.*)?$ - [F,L]
+
+    # Allow /public and /install in both root and subdirectory deployments
+    RewriteRule ^(public|install)(/|$) - [L]
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
